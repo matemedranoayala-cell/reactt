@@ -4,7 +4,15 @@ import { OrbitControls, useTexture } from '@react-three/drei'
 import { BackSide, type Mesh } from 'three'
 import './App.css'
 
-function PhotoSphere({ image, position }: { image: string; position: [number, number, number] }) {
+function PhotoSphere({
+  image,
+  position,
+  triangle = false,
+}: {
+  image: string
+  position: [number, number, number]
+  triangle?: boolean
+}) {
   const sphere = useRef<Mesh>(null)
   const [hovered, setHovered] = useState(false)
   const texture = useTexture(image)
@@ -23,7 +31,11 @@ function PhotoSphere({ image, position }: { image: string; position: [number, nu
       onPointerOver={() => setHovered(true)}
       onPointerOut={() => setHovered(false)}
     >
-      <sphereGeometry args={[0.8, 48, 48]} />
+      {triangle ? (
+        <coneGeometry args={[0.8, 1.4, 3]} />
+      ) : (
+        <sphereGeometry args={[0.8, 48, 48]} />
+      )}
       <meshBasicMaterial map={texture} />
     </mesh>
   )
@@ -46,7 +58,7 @@ function App() {
       <Suspense fallback={null}>
         <Panorama />
         <PhotoSphere image="/goku.jpg" position={[-1.8, 0, -4]} />
-        <PhotoSphere image="/messixd.jpg" position={[0, 0, -4]} />
+        <PhotoSphere image="/messixd.jpg" position={[0, 0, -4]} triangle />
         <PhotoSphere image="/Muricioxd.jpg" position={[1.8, 0, -4]} />
       </Suspense>
       <OrbitControls
