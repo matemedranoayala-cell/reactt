@@ -1,7 +1,7 @@
-import { Suspense, useEffect, useMemo, useRef, useState } from 'react'
+import { Suspense, useRef, useState } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { OrbitControls, useTexture } from '@react-three/drei'
-import { BackSide, CanvasTexture, SRGBColorSpace, type Mesh } from 'three'
+import { BackSide, type Mesh } from 'three'
 import './App.css'
 
 function PhotoSphere({ image, position }: { image: string; position: [number, number, number] }) {
@@ -30,29 +30,7 @@ function PhotoSphere({ image, position }: { image: string; position: [number, nu
 }
 
 function Panorama() {
-  const texture = useTexture('/messixd.jpg')
-  const panorama = useMemo(() => {
-    const image = texture.image
-    if (!(image instanceof HTMLImageElement)) {
-      throw new Error('La imagen panorámica no se pudo cargar.')
-    }
-
-    const canvas = document.createElement('canvas')
-    canvas.width = 2048
-    canvas.height = 1024
-    const context = canvas.getContext('2d')
-
-    if (!context) {
-      throw new Error('No se pudo crear la textura panorámica.')
-    }
-
-    context.drawImage(image, 0, 0, canvas.width, canvas.height)
-    const panoramaTexture = new CanvasTexture(canvas)
-    panoramaTexture.colorSpace = SRGBColorSpace
-    return panoramaTexture
-  }, [texture])
-
-  useEffect(() => () => panorama.dispose(), [panorama])
+  const panorama = useTexture('/360.jpg')
 
   return (
     <mesh>
